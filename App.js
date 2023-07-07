@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Checklist from "./src/components/screens/flap";
+import Checklist from "./src/components/screens/checklist";
 import MainPage from "./src/components/screens/main";
 import Report from "./src/components/screens/report";
 import { NavigationContainer } from "@react-navigation/native";

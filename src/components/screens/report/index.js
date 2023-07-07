@@ -29,7 +29,7 @@ class Report extends Component {
 
   componentDidMount() {
     let database = getDatabase(db);
-    const reference = ref(database, `records/`);
+    const reference = ref(database, `data/sga/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];
     this.setState({
