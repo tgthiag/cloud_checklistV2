@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   ImageBackground,
@@ -9,13 +9,27 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { listSectors } from "../../../lists";
+// import { listSectors } from "../../../lists";
 import TurnoSelect from "../../functions/turnoSelect"
+import loadQuestions from "../../services/loadquestions";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 const logo = require("../../../assets/sga_logo.png");
 
 export default function MainPage({ navigation }) {
+  const [listSectors, setListSectors] = useState(null);
+  const data = loadQuestions();
+
+  useEffect(() => {
+    if (data) {
+      const updatedListSectors = Object.entries(data).map(([key, lista]) => ({
+        name: key,
+        lista: lista.map((item) => item.question),
+        key: key,
+      }));
+      setListSectors(updatedListSectors);
+    }
+  }, [data]);
   const RelatorioButton = () => {
     return (
       <TouchableOpacity
@@ -58,6 +72,7 @@ export default function MainPage({ navigation }) {
       </TouchableOpacity>
     );
   };
+  
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={sgaBackground} style={styles.ImageBackground}>
