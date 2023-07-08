@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyRadioBt from "../../functions/radioBt";
-import { db } from "../../../../database";
+import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
+import { dbpath } from "../../config/dbpath";
 
-const sgaBackground = require("../../../../assets/sga.jpg");
+const sgaBackground = require("../../../assets/sga.jpg");
 
 export default class Checklist extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Checklist extends Component {
     const key = `${this.state.contextTurno}_${placed + 1}`;
     const value = result;
     update(
-      ref(database, `data/sga/records/${this.state.setor.name}/${getCurrentDate()}/`),
+      ref(database, `data/${dbpath}/records/${this.state.setor.name}/${getCurrentDate()}/`),
       {
         [key]: value,
       }

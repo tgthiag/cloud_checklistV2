@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Checklist from "./src/components/screens/checklist";
-import MainPage from "./src/components/screens/main";
-import Report from "./src/components/screens/report";
+import Checklist from "./src/screens/checklist";
+import MainPage from "./src/screens/main";
+import Report from "./src/screens/report";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";

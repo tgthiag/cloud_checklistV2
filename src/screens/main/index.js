@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { listSectors } from "../../../../lists";
-import TurnoSelect from "../../functions/turnoSelect";
+import { listSectors } from "../../../lists";
+import TurnoSelect from "../../functions/turnoSelect"
 
-const sgaBackground = require("../../../../assets/sga.jpg");
-const logo = require("../../../../assets/sga_logo.png");
+const sgaBackground = require("../../../assets/sga.jpg");
+const logo = require("../../../assets/sga_logo.png");
 
 export default function MainPage({ navigation }) {
   const RelatorioButton = () => {

@@ -8,11 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../../../database";
+import { db } from "../../../database";
 import { ref, onValue, getDatabase } from "firebase/database";
-import { listSectors } from "../../../../lists";
+import { listSectors } from "../../../lists";
+import { dbpath } from "../../config/dbpath";
 
-const sgaBackground = require("../../../../assets/sga.jpg");
+const sgaBackground = require("../../../assets/sga.jpg");
 
 class Report extends Component {
   constructor(props) {
@@ -28,8 +29,8 @@ class Report extends Component {
   }
 
   componentDidMount() {
-    let database = getDatabase(db);
-    const reference = ref(database, `data/sga/records/`);
+    const database = getDatabase(db);
+    const reference = ref(database, `data/${dbpath}/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];
     this.setState({
