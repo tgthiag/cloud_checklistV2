@@ -7,11 +7,13 @@ import Report from "./src/screens/report";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";
+import { MyProvider } from "./src/services/dataContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    <MyProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={"main"}>
           <Stack.Screen
@@ -31,11 +33,11 @@ export default function App() {
           />
         </Stack.Navigator>
         {/* <Toast position={"bottom"} bottomOffset={90} /> */}
-
       </NavigationContainer>
+    </MyProvider>
   );
 }
-registerRootComponent(()=>App())
+registerRootComponent(() => App());
 const styles = StyleSheet.create({
   container: {
     flex: 1,
