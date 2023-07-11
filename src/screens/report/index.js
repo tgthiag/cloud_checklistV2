@@ -63,51 +63,50 @@ class Report extends Component {
     let setorVerifications = 0;
     let setorIsOk = 0;
     for (let idxLista = 0; idxLista < listSectors.length; idxLista++) {
-      //verify Y times, Y = list length
+      // verify Y times, Y = list length
       let acumulator = [];
-
+  
       for (let y = 1; y < listSectors[idxLista].lista.length + 1; y++) {
-        //Entering folder, acessing dates
-        for (let i in Object.fromEntries(
-          Object.entries(data[listSectors[idxLista].key]).filter(([key]) =>
-            key.includes(`${year}-${month}`)
-          )
-        )) {
-          // Acessing the key/values on every date
-          for (let x in data[listSectors[idxLista].key][i]) {
-            for (let trn = 1; trn < 4; trn++) {
-              if (
-                (x === `${trn}_${y}`) &
-                (data[listSectors[idxLista].key][i][x] === 1 ||
-                  data[listSectors[idxLista].key][i][x] === 0)
-              ) {
-                verifications += 1;
-              }
-              if (
-                (x === `${trn}_${y}`) &
-                (data[listSectors[idxLista].key][i][x] === 1)
-              ) {
-                isOk += 1;
-              }
-              if (
-                (x === `${trn}_${y}`) &
-                (data[listSectors[idxLista].key][i][x] === 0)
-              ) {
-                errors += 1;
+        // Entering folder, accessing dates
+        const sectorKeyData = data[listSectors[idxLista].key];
+        if (sectorKeyData) {
+          const filteredData = Object.fromEntries(
+            Object.entries(sectorKeyData).filter(([key]) =>
+              key.includes(`${year}-${month}`)
+            )
+          );
+          for (let i in filteredData) {
+            // Accessing the key/values on every date
+            const dateData = filteredData[i];
+            for (let x in dateData) {
+              for (let trn = 1; trn < 4; trn++) {
+                const currentValue = dateData[x];
+                if (
+                  x === `${trn}_${y}` &&
+                  (currentValue === 1 || currentValue === 0)
+                ) {
+                  verifications += 1;
+                }
+                if (x === `${trn}_${y}` && currentValue === 1) {
+                  isOk += 1;
+                }
+                if (x === `${trn}_${y}` && currentValue === 0) {
+                  errors += 1;
+                }
               }
             }
           }
         }
-
+  
         acumulator.push({
-          ...acumulator[listSectors[idxLista].key],
+          ...(acumulator[listSectors[idxLista].key] || {}),
           text: listSectors[idxLista].lista[y - 1],
           verif: verifications,
           errors: errors,
           percent: ((isOk / verifications) * 100).toFixed(2),
         });
-        setorVerifications = setorVerifications + verifications;
-        setorIsOk = setorIsOk + isOk;
+        setorVerifications += verifications;
+        setorIsOk += isOk;
         verifications = 0;
         isOk = 0;
         errors = 0;
@@ -119,7 +118,7 @@ class Report extends Component {
           [listSectors[idxLista].key]: percent,
         },
       }));
-
+  
       this.setState((previous) => ({
         generalData: {
           ...previous.generalData,
@@ -130,6 +129,7 @@ class Report extends Component {
       setorVerifications = 0;
     }
   }
+  
 
   handleChange(props) {
     if (props === "<") {
