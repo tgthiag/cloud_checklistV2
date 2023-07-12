@@ -1,18 +1,23 @@
-import { ref, onValue, getDatabase } from 'firebase/database';
-import { dbpath } from '../config/dbpath';
-import db from '../../database';
+import { useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { dbpath } from "../config/dbpath";
+import { db } from "../../database";
 
-// Initialize Firebase with your project configuration
-// ...
-
-export async function GetDataFromFirebase() {
+function firebaseOnValue() {
   const database = getDatabase(db);
-  const reference = ref(database, `data/${dbpath}/records/`);
+  const [data, setData] = useState(null);
 
-  return new Promise((resolve, reject) => {
+  useEffect(() => {
+    const reference = ref(database, `data/${dbpath}/records`);
     onValue(reference, (snapshot) => {
-      const data = snapshot.val();
-      resolve(data);
+      const firebaseData = snapshot.val();
+      setData(firebaseData);
+      console.log(firebaseData);
     });
-  });
+
+  }, []);
+
+  return data;
 }
+
+export default firebaseOnValue;
