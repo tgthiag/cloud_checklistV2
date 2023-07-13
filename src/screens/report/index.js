@@ -10,7 +10,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../database";
 import { ref, onValue, getDatabase } from "firebase/database";
-import { listSectors } from "../../../lists";
 import { dbpath } from "../../config/dbpath";
 
 const sgaBackground = require("../../../assets/sga.jpg");
@@ -19,7 +18,7 @@ class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flap: [],
+      listSectors: this.props.route.params.questions,
       generalData: [],
       reportDate: [],
       showView: null,
@@ -30,6 +29,7 @@ class Report extends Component {
 
   componentDidMount() {
     const database = getDatabase(db);
+    console.log(this.props.route.params.questions)
     const reference = ref(database, `data/${dbpath}/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];
@@ -62,13 +62,13 @@ class Report extends Component {
     let errors = 0;
     let setorVerifications = 0;
     let setorIsOk = 0;
-    for (let idxLista = 0; idxLista < listSectors.length; idxLista++) {
+    for (let idxLista = 0; idxLista < this.state.listSectors.length; idxLista++) {
       // verify Y times, Y = list length
       let acumulator = [];
   
-      for (let y = 1; y < listSectors[idxLista].lista.length + 1; y++) {
+      for (let y = 1; y < this.state.listSectors[idxLista].lista.length + 1; y++) {
         // Entering folder, accessing dates
-        const sectorKeyData = data[listSectors[idxLista].key];
+        const sectorKeyData = data[this.state.listSectors[idxLista].key];
         if (sectorKeyData) {
           const filteredData = Object.fromEntries(
             Object.entries(sectorKeyData).filter(([key]) =>
@@ -99,8 +99,8 @@ class Report extends Component {
         }
   
         acumulator.push({
-          ...(acumulator[listSectors[idxLista].key] || {}),
-          text: listSectors[idxLista].lista[y - 1],
+          ...(acumulator[this.state.listSectors[idxLista].key] || {}),
+          text: this.state.listSectors[idxLista].lista[y - 1],
           verif: verifications,
           errors: errors,
           percent: ((isOk / verifications) * 100).toFixed(2),
@@ -115,14 +115,14 @@ class Report extends Component {
       this.setState((previous) => ({
         setorPercent: {
           ...previous.setorPercent,
-          [listSectors[idxLista].key]: percent,
+          [this.state.listSectors[idxLista].key]: percent,
         },
       }));
   
       this.setState((previous) => ({
         generalData: {
           ...previous.generalData,
-          [listSectors[idxLista].key]: acumulator,
+          [this.state.listSectors[idxLista].key]: acumulator,
         },
       }));
       setorIsOk = 0;
@@ -279,7 +279,7 @@ class Report extends Component {
                             fontSize: 22,
                           }}
                         >
-                          {listSectors[index].name}
+                          {this.state.listSectors[index].name}
                         </Text>
                         <View
                           style={{
@@ -291,7 +291,7 @@ class Report extends Component {
                               this.state.showView !== index
                                 ? this.backColor(
                                     this.state.setorPercent[
-                                      listSectors[index].key
+                                      this.state.listSectors[index].key
                                     ],
                                     15
                                   )
@@ -306,10 +306,10 @@ class Report extends Component {
                               fontSize: 16,
                             }}
                           >
-                            {this.state.setorPercent[listSectors[index].key] !==
+                            {this.state.setorPercent[this.state.listSectors[index].key] !==
                             "NaN"
                               ? this.state.setorPercent[
-                                  listSectors[index].key
+                                  this.state.listSectors[index].key
                                 ] + "%"
                               : "-"}
                           </Text>
