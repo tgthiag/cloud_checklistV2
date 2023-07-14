@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { RadioButton } from "react-native-paper";
-import { db } from "../../database";
-import { ref, onValue, getDatabase } from "firebase/database";
 import { getCurrentDate } from "./getDate";
-import { dbpath } from "../config/dbpath";
 
 class MyRadioBt extends Component {
   constructor(props) {
@@ -13,29 +10,21 @@ class MyRadioBt extends Component {
       checked: 3,
     };
   }
-  holder(number) {
-    this.props.callback(number);
-  }
 
   componentDidMount() {
-    const { dailyId } = this.props;
-    const { setor } = this.props;
-    const setorAtual = setor;
-    const database = getDatabase(db);
-    const reference = ref(database, `data/${dbpath}/records/${setorAtual}/${getCurrentDate()}/`);
+    const { firebaseData, dailyId, setor } = this.props;
+    if (firebaseData && setor) {
+      const setorAtual = setor;
+      const date = getCurrentDate();
+      const checkedValue = firebaseData?.[setorAtual]?.[date];
+      (firebaseData != null) & (dailyId != null) & (checkedValue !== undefined)
+      ? this.setState({ checked: !checkedValue[dailyId] ? 3 : checkedValue[dailyId] })
+      : this.setState({ checked: 3 });
+    }
+  }
 
-    onValue(
-      reference,
-      (snapshot) => {
-        const data = snapshot.val();
-        (data != null) & (dailyId != null)
-          ? this.setState({ checked: data[dailyId] })
-          : this.setState({ checked: 3 });
-      },
-      {
-        onlyOnce: true,
-      }
-    );
+  holder(number) {
+    this.props.callback(number);
   }
 
   render() {
