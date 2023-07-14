@@ -29,7 +29,6 @@ class Report extends Component {
 
   componentDidMount() {
     const database = getDatabase(db);
-    console.log(this.props.route.params.questions)
     const reference = ref(database, `data/${dbpath}/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];

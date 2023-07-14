@@ -20,7 +20,6 @@ const logo = require("../../../assets/sga_logo.png");
 export default function MainPage({ navigation }) {
   const [listSectors, setListSectors] = useState(null);
   const data = loadQuestions();
-  const onValue = firebaseOnValue()
 
   useEffect(() => {
     if (data) {
