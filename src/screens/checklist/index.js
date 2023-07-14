@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { getDatabase, ref, update } from "firebase/database";
+import React, { useState, useEffect } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -10,74 +9,77 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyRadioBt from "../../functions/radioBt";
+import { getDatabase, ref, update } from "firebase/database";
 import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
 import { dbpath } from "../../config/dbpath";
+import { useFirebaseData } from "../../services/getDataFromFirebase";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
-export default class Checklist extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checked: 0,
-      setor: { name: this.props.route.params.fireDBName },
-      listas: this.props.route.params.setores,
-      contextTurno: global.checkValue,
-    };
-  }
+const Checklist = ({ route }) => {
+  const [checked, setChecked] = useState(0);
+  const [setor, setSetor] = useState({ name: route.params.fireDBName });
+  const [listas, setListas] = useState(route.params.setores);
+  const [contextTurno, setContextTurno] = useState(global.checkValue);
+  // const [firebaseData, setFirebaseData] = useState({});
+  const firebaseData = useFirebaseData();
 
-  updateValueDb(result, placed) {
+  const updateValueDb = (result, placed) => {
     const database = getDatabase(db);
-    const key = `${this.state.contextTurno}_${placed + 1}`;
+    const key = `${contextTurno}_${placed + 1}`;
     const value = result;
     update(
-      ref(database, `data/${dbpath}/records/${this.state.setor.name}/${getCurrentDate()}/`),
+      ref(
+        database,
+        `data/${dbpath}/records/${setor.name}/${getCurrentDate()}/`
+      ),
       {
         [key]: value,
       }
     );
-  }
+  };
 
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ImageBackground source={sgaBackground} style={styles.imgBackground}>
-          <FlatList
-            data={this.state.listas}
-            renderItem={({ item, index }) => (
-              <TouchableWithoutFeedback>
-                <View
-                  style={[
-                    styles.container,
-                    {
-                      backgroundColor: "rgba(0,0,0,0.6)",
-                      margin: 3,
-                      borderRadius: 15,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
-                  ]}
-                  numColumns={2}
-                  flexDirection={"row"}
-                >
-                  <Text style={styles.pontosText}>{item}</Text>
-                  <MyRadioBt
-                    dailyId={`${this.state.contextTurno}_${index + 1}`}
-                    setor={this.state.setor.name}
-                    callback={(value) => {
-                      this.updateValueDb(value, index);
-                    }}
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-            )}
-          />
-        </ImageBackground>
-      </SafeAreaView>
-    );
-  }
-}
+  return (
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={sgaBackground} style={styles.imgBackground}>
+        <FlatList
+          data={listas}
+          renderItem={({ item, index }) => (
+            <TouchableWithoutFeedback>
+              <View
+                style={[
+                  styles.container,
+                  {
+                    backgroundColor: "rgba(0,0,0,0.6)",
+                    margin: 3,
+                    borderRadius: 15,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                ]}
+                numColumns={2}
+                flexDirection={"row"}
+              >
+                <Text style={styles.pontosText}>{item}</Text>
+                {firebaseData &&
+                <MyRadioBt
+                  firebaseData={firebaseData}
+                  dailyId={`${contextTurno}_${index + 1}`}
+                  setor={setor.name}
+                  callback={(value) => {
+                    updateValueDb(value, index);
+                  }}
+                />}
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+        />
+      </ImageBackground>
+    </SafeAreaView>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -97,3 +99,5 @@ const styles = StyleSheet.create({
     color: "#d3d3d3",
   },
 });
+
+export default Checklist;
