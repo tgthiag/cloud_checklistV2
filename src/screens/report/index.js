@@ -28,23 +28,23 @@ class Report extends Component {
   }
 
   componentDidMount() {
-    const database = getDatabase(db);
-    const reference = ref(database, `data/${dbpath}/records/`);
+    // const database = getDatabase(db);
+    // const reference = ref(database, `data/${dbpath}/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];
     this.setState({
       reportDate: datenow,
     });
-    onValue(
-      reference,
-      (snapshot) => {
-        const firebaseData = snapshot.val();
+    // onValue(
+    //   reference,
+    //   (snapshot) => {
+        const firebaseData = this.props.route.params.fireData;
         this.setState({ data: firebaseData }, () => {
           this.loadData(date.getFullYear(), date.getMonth() + 1, firebaseData);
         });
-      },
-      { onlyOnce: true }
-    );
+    //   },
+    //   { onlyOnce: true }
+    // );
   }
 
   backColor(percent, opacity) {

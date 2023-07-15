@@ -22,8 +22,7 @@ const Checklist = ({ route }) => {
   const [setor, setSetor] = useState({ name: route.params.fireDBName });
   const [listas, setListas] = useState(route.params.setores);
   const [contextTurno, setContextTurno] = useState(global.checkValue);
-  // const [firebaseData, setFirebaseData] = useState({});
-  const firebaseData = useFirebaseData();
+  const firebaseData = route.params.fireData;
 
   const updateValueDb = (result, placed) => {
     const database = getDatabase(db);

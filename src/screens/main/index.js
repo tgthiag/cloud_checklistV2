@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // import { listSectors } from "../../../lists";
 import TurnoSelect from "../../functions/turnoSelect"
 import loadQuestions from "../../services/loadquestions";
-import firebaseOnValue from "../../services/getDataFromFirebase";
+import { useFirebaseData } from "../../services/getDataFromFirebase";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 const logo = require("../../../assets/sga_logo.png");
@@ -20,6 +20,7 @@ const logo = require("../../../assets/sga_logo.png");
 export default function MainPage({ navigation }) {
   const [listSectors, setListSectors] = useState(null);
   const data = loadQuestions();
+  const firebaseData = useFirebaseData();
 
   useEffect(() => {
     if (data) {
@@ -40,7 +41,7 @@ export default function MainPage({ navigation }) {
           justifyContent: "center",
           marginBottom: 12,
         }}
-        onPress={() => navigation.navigate("report", { questions: listSectors })}
+        onPress={() => navigation.navigate("report", { questions: listSectors, fireData: firebaseData })}
       >
         <LinearGradient
           style={{
@@ -97,6 +98,7 @@ export default function MainPage({ navigation }) {
                     ? navigation.navigate("checklist", {
                         setores: item.lista,
                         fireDBName: item.key,
+                        fireData: firebaseData 
                       })
                     : alert("Selecione o turno")
                 }
