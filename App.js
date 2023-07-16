@@ -8,6 +8,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";
 import { MyProvider } from "./src/services/dataContext";
+import LoginScreen from "./src/screens/loginScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +16,11 @@ export default function App() {
   return (
     <MyProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={"main"}>
+        <Stack.Navigator initialRouteName={"login"}>
+          <Stack.Screen
+          name="login"
+          component={LoginScreen}
+          />
           <Stack.Screen
             name="main"
             component={MainPage}
