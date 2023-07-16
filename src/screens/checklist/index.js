@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyRadioBt from "../../functions/radioBt";
+import MyRadioBt from "../../components/radioBt";
 import { getDatabase, ref, update } from "firebase/database";
 import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
@@ -17,7 +17,6 @@ import { dbpath } from "../../config/dbpath";
 const sgaBackground = require("../../../assets/sga.jpg");
 
 const Checklist = ({ route }) => {
-  const [checked, setChecked] = useState(0);
   const [setor, setSetor] = useState({ name: route.params.fireDBName });
   const [listas, setListas] = useState(route.params.setores);
   const [contextTurno, setContextTurno] = useState(global.checkValue);
