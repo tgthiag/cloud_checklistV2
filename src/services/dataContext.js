@@ -3,14 +3,14 @@ import React, { createContext, useState } from "react";
 const MyContext = createContext();
 
 function MyProvider({children}) {
-  const [dataContext, setDataContext] = useState({});
+  const [currentUser, setcurrentUser] = useState({});
 
-  const updateState = (newState) => {
-    setDataContext(newState);
+  const updateUser = (newState) => {
+    setcurrentUser(newState);
   };
 
   return (
-    <MyContext.Provider value={{ dataContext, updateState }}>
+    <MyContext.Provider value={{ currentUser, updateUser }}>
       {children}
     </MyContext.Provider>
   );
