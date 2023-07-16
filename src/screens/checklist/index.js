@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -13,6 +13,7 @@ import { getDatabase, ref, update } from "firebase/database";
 import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
 import { dbpath } from "../../config/dbpath";
+import { MyContext } from "../../services/dataContext";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
@@ -21,6 +22,8 @@ const Checklist = ({ route }) => {
   const [listas, setListas] = useState(route.params.setores);
   const [contextTurno, setContextTurno] = useState(global.checkValue);
   const firebaseData = route.params.fireData;
+  const { currentUser } = useContext(MyContext);
+  console.log(currentUser)
 
   const updateValueDb = (result, placed) => {
     const database = getDatabase(db);
