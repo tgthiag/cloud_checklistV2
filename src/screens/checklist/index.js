@@ -13,7 +13,6 @@ import { getDatabase, ref, update } from "firebase/database";
 import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
 import { dbpath } from "../../config/dbpath";
-import { useFirebaseData } from "../../services/getDataFromFirebase";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 

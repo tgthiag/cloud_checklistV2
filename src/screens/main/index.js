@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { listSectors } from "../../../lists";
 import TurnoSelect from "../../functions/turnoSelect"
 import loadQuestions from "../../services/loadquestions";
 import { useFirebaseData } from "../../services/getDataFromFirebase";

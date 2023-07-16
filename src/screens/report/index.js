@@ -8,9 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../../database";
-import { ref, onValue, getDatabase } from "firebase/database";
-import { dbpath } from "../../config/dbpath";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
@@ -28,23 +25,16 @@ class Report extends Component {
   }
 
   componentDidMount() {
-    // const database = getDatabase(db);
-    // const reference = ref(database, `data/${dbpath}/records/`);
     let date = new Date();
     let datenow = [date.getFullYear(), date.getMonth() + 1];
     this.setState({
       reportDate: datenow,
     });
-    // onValue(
-    //   reference,
-    //   (snapshot) => {
-        const firebaseData = this.props.route.params.fireData;
-        this.setState({ data: firebaseData }, () => {
-          this.loadData(date.getFullYear(), date.getMonth() + 1, firebaseData);
-        });
-    //   },
-    //   { onlyOnce: true }
-    // );
+
+    const firebaseData = this.props.route.params.fireData;
+    this.setState({ data: firebaseData }, () => {
+      this.loadData(date.getFullYear(), date.getMonth() + 1, firebaseData);
+    });
   }
 
   backColor(percent, opacity) {
@@ -61,11 +51,19 @@ class Report extends Component {
     let errors = 0;
     let setorVerifications = 0;
     let setorIsOk = 0;
-    for (let idxLista = 0; idxLista < this.state.listSectors.length; idxLista++) {
+    for (
+      let idxLista = 0;
+      idxLista < this.state.listSectors.length;
+      idxLista++
+    ) {
       // verify Y times, Y = list length
       let acumulator = [];
-  
-      for (let y = 1; y < this.state.listSectors[idxLista].lista.length + 1; y++) {
+
+      for (
+        let y = 1;
+        y < this.state.listSectors[idxLista].lista.length + 1;
+        y++
+      ) {
         // Entering folder, accessing dates
         const sectorKeyData = data[this.state.listSectors[idxLista].key];
         if (sectorKeyData) {
@@ -96,7 +94,7 @@ class Report extends Component {
             }
           }
         }
-  
+
         acumulator.push({
           ...(acumulator[this.state.listSectors[idxLista].key] || {}),
           text: this.state.listSectors[idxLista].lista[y - 1],
@@ -117,7 +115,7 @@ class Report extends Component {
           [this.state.listSectors[idxLista].key]: percent,
         },
       }));
-  
+
       this.setState((previous) => ({
         generalData: {
           ...previous.generalData,
@@ -128,7 +126,6 @@ class Report extends Component {
       setorVerifications = 0;
     }
   }
-  
 
   handleChange(props) {
     if (props === "<") {
@@ -305,8 +302,9 @@ class Report extends Component {
                               fontSize: 16,
                             }}
                           >
-                            {this.state.setorPercent[this.state.listSectors[index].key] !==
-                            "NaN"
+                            {this.state.setorPercent[
+                              this.state.listSectors[index].key
+                            ] !== "NaN"
                               ? this.state.setorPercent[
                                   this.state.listSectors[index].key
                                 ] + "%"
