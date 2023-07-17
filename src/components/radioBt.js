@@ -18,7 +18,7 @@ class MyRadioBt extends Component {
       const date = getCurrentDate();
       const checkedValue = firebaseData?.[setorAtual]?.[date];
       (firebaseData != null) & (dailyId != null) & (checkedValue !== undefined)
-      ? this.setState({ checked: !checkedValue[dailyId] ? 3 : checkedValue[dailyId] })
+      ? this.setState({ checked: checkedValue[dailyId] === 1 || checkedValue[dailyId] == 0 ? checkedValue[dailyId] : 3})
       : this.setState({ checked: 3 });
     }
   }
