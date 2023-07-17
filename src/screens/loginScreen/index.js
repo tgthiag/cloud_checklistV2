@@ -1,7 +1,5 @@
-import { auth } from "../../../database";
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
-  KeyboardAvoidingView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -9,31 +7,77 @@ import {
   Text,
 } from "react-native";
 import { MyContext } from "../../services/dataContext";
+import { auth } from "../../../database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import MainContainer from "../../components/MainContainer";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {currentUser, updateUser } = useContext(MyContext)
+  const [displayName, setDisplayName] = useState("");
+  const [registrationMode, setRegistrationMode] = useState(false);
+  const { currentUser, updateUser } = useContext(MyContext);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log("useEffect login")
         updateUser(user);
         navigation.navigate("main");
       }
     });
 
     return unsubscribe;
-  }, [navigation, currentUser]);
+  }, [currentUser]);
+
+  useEffect(() => {
+    const getSavedEmail = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem("savedEmail");
+        setEmail(savedEmail);
+      } catch (error) {
+        console.error("Error retrieving saved email:", error);
+      }
+    };
+
+    getSavedEmail(); // Call the async function inside useEffect
+  }, []);
+
+  const saveEmail = async (currentEmail) => {
+    try {
+      await AsyncStorage.setItem("savedEmail", currentEmail);
+    } catch (error) {
+      console.error("Error saving email:", error);
+    }
+  };
 
   const handleSignUp = () => {
+    if (!registrationMode) {
+      setRegistrationMode(true);
+      alert("Please enter a display name (without spaces).");
+      return;
+    }
+
+    if (displayName.trim() === "") {
+      alert("Please enter a valid display name (without spaces).");
+      return;
+    }
+
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        updateUser(user);
-        console.log("Registered with:", user.email);
+        saveEmail(user.email);
+        user
+          .updateProfile({
+            displayName: displayName,
+          })
+          .then(() => {
+            updateUser(user);
+            console.log("Registered with:", user.email);
+          })
+          .catch((error) => {
+            console.error("Error setting display name:", error);
+          });
       })
       .catch((error) => alert(error.message));
   };
@@ -43,6 +87,7 @@ const LoginScreen = ({ navigation }) => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
+        saveEmail(user.email);
         updateUser(user);
         console.log("Logged in with:", user.email);
       })
@@ -50,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container} behavior="padding">
+    <MainContainer>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -65,20 +110,32 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
           secureTextEntry
         />
+        {registrationMode && (
+          <TextInput
+            placeholder="Display Name (without spaces)"
+            value={displayName}
+            onChangeText={(text) => setDisplayName(text)}
+            style={styles.input}
+          />
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
+      {!registrationMode && (
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={handleSignUp}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <Text style={styles.buttonOutlineText}>
+            {registrationMode ? "Concluir Cadastro" : "Cadastrar"}
+          </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </MainContainer>
   );
 };
 
