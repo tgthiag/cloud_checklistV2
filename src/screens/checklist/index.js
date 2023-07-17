@@ -14,6 +14,7 @@ import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
 import { dbpath } from "../../config/dbpath";
 import { MyContext } from "../../services/dataContext";
+import MainContainer from "../../components/MainContainer";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
@@ -23,7 +24,7 @@ const Checklist = ({ route }) => {
   const [contextTurno, setContextTurno] = useState(global.checkValue);
   const firebaseData = route.params.fireData;
   const { currentUser } = useContext(MyContext);
-  console.log(currentUser)
+  console.log(currentUser);
 
   const updateValueDb = (result, placed) => {
     const database = getDatabase(db);
@@ -41,28 +42,27 @@ const Checklist = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageBackground source={sgaBackground} style={styles.imgBackground}>
-        <FlatList
-          data={listas}
-          renderItem={({ item, index }) => (
-            <TouchableWithoutFeedback>
-              <View
-                style={[
-                  styles.container,
-                  {
-                    backgroundColor: "rgba(0,0,0,0.6)",
-                    margin: 3,
-                    borderRadius: 15,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
-                ]}
-                numColumns={2}
-                flexDirection={"row"}
-              >
-                <Text style={styles.pontosText}>{item}</Text>
-                {firebaseData &&
+    <MainContainer>
+      <FlatList
+        data={listas}
+        renderItem={({ item, index }) => (
+          <TouchableWithoutFeedback>
+            <View
+              style={[
+                styles.container,
+                {
+                  backgroundColor: "rgba(0,0,0,0.6)",
+                  margin: 3,
+                  borderRadius: 15,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+              numColumns={2}
+              flexDirection={"row"}
+            >
+              <Text style={styles.pontosText}>{item}</Text>
+              {firebaseData && (
                 <MyRadioBt
                   firebaseData={firebaseData}
                   dailyId={`${contextTurno}_${index + 1}`}
@@ -70,13 +70,13 @@ const Checklist = ({ route }) => {
                   callback={(value) => {
                     updateValueDb(value, index);
                   }}
-                />}
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-        />
-      </ImageBackground>
-    </SafeAreaView>
+                />
+              )}
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+      />
+    </MainContainer>
   );
 };
 

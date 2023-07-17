@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MainContainer from "../../components/MainContainer";
+import Title from "../../components/title";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
@@ -202,12 +204,11 @@ class Report extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <ImageBackground
-          source={sgaBackground}
+<MainContainer>
+        <View
           style={styles.containerBackground}
         >
-          <Text style={styles.Title}>Relatórios</Text>
+          <Title children={"Relatórios"}/>
           <View
             style={{ flexDirection: "row", justifyContent: "space-evenly" }}
           >
@@ -338,28 +339,18 @@ class Report extends Component {
                 </View>
               ))}
           </ScrollView>
-        </ImageBackground>
-      </SafeAreaView>
+        </View>
+        </MainContainer>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+
   },
   containerBackground: {
-    flex: 1,
-  },
-  Title: {
-    fontSize: 48,
-    color: "#FFFFFF",
-    marginBottom: 12,
-    fontWeight: "bold",
-    textShadowColor: "rgba(0, 0, 0, 0.6)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
-    alignSelf: "center",
+
   },
 });
 

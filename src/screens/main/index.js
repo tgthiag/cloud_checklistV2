@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TurnoSelect from "../../components/turnoSelect"
 import loadQuestions from "../../services/loadquestions";
 import { useFirebaseData } from "../../services/getDataFromFirebase";
+import MainContainer from "../../components/MainContainer";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 const logo = require("../../../assets/sga_logo.png");
@@ -75,9 +76,7 @@ export default function MainPage({ navigation }) {
   };
   
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageBackground source={sgaBackground} style={styles.ImageBackground}>
-        <SafeAreaView style={styles.centerContainer}>
+<MainContainer>
           <Image source={logo} style={styles.logo} />
           <TurnoSelect />
           <FlatList
@@ -133,9 +132,7 @@ export default function MainPage({ navigation }) {
               </TouchableOpacity>
             )}
           />
-        </SafeAreaView>
-      </ImageBackground>
-    </SafeAreaView>
+</MainContainer>
   );
 }
 
