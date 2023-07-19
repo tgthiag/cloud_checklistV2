@@ -78,21 +78,19 @@ class Report extends Component {
             // Accessing the key/values on every date
             const dateData = filteredData[i];
             for (let x in dateData) {
-              for (let trn = 1; trn < 4; trn++) {
-                const currentValue = dateData[x];
-                if (
-                  x === `${trn}_${y}` &&
-                  (currentValue === 1 || currentValue === 0)
-                ) {
+              // const username = x.split("_")[0];
+              let value = dateData[x]
+              switch(value) {
+                case 1:
                   verifications += 1;
-                }
-                if (x === `${trn}_${y}` && currentValue === 1) {
                   isOk += 1;
-                }
-                if (x === `${trn}_${y}` && currentValue === 0) {
+                  break;
+                case 0:
+                  verifications += 1;
                   errors += 1;
+                  break;
+                default:
                 }
-              }
             }
           }
         }
