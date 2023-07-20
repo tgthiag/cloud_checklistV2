@@ -28,7 +28,7 @@ const Checklist = ({ route }) => {
 
   const updateValueDb = (result, placed) => {
     const database = getDatabase(db);
-    const key = `${contextTurno}_${placed + 1}`;
+    const key = `${currentUser.displayName}_${placed + 1}`;
     const value = result;
     update(
       ref(
@@ -51,7 +51,7 @@ const Checklist = ({ route }) => {
               style={[
                 styles.container,
                 {
-                  backgroundColor: "rgba(0,0,0,0.6)",
+                  backgroundColor: "rgba(0,0,0,0.5)",
                   margin: 3,
                   borderRadius: 15,
                   justifyContent: "center",
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 15,
     width: "62%",
     fontWeight: "bold",
-    color: "#d3d3d3",
+    color: "white",
   },
 });
 
