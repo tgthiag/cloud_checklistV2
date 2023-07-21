@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { getCurrentDate } from "../functions/getDate";
 
+
 class MyRadioBt extends Component {
   constructor(props) {
     super(props);
