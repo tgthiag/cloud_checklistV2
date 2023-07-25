@@ -46,12 +46,12 @@ class Report extends Component {
     } else if (percent < 90) {
       return `rgba(223, 112, 0, 0.${opacity})`;
     }
-    console.log(
-      "backColor",
-      this.state.generalData,
-      "            ",
-      this.state.setorPercent
-    );
+    // console.log(
+    //   "backColor",
+    //   this.state.generalData,
+    //   "            ",
+    //   this.state.setorPercent
+    // );
   }
 
   // loadData(year, month, data) {
@@ -174,19 +174,21 @@ class Report extends Component {
     let setorVerifications = 0;
     let setorIsOk = 0;
     let usernames = {};
+    let setorPercent = { ...this.state.setorPercent };
+    let generalData = { ...this.state.generalData };
     // console.log(data)
-    console.log(this.state.listSectors)
+    // console.log(this.state.listSectors)
     for (setor in this.state.listSectors) {
       let acumulator = [];
       for (
-        let itemQuestion = 1;
-        itemQuestion < this.state.listSectors[setor].length + 1;
+        let itemQuestion = 0;
+        itemQuestion < this.state.listSectors[setor].length;
         itemQuestion++
       ) {
         // console.log(setor, this.state.listSectors[setor].length)
 
         if (data[setor]) {
-          console.log(setor, data[setor]);
+          // console.log(setor, data[setor]);
           //filtered data output {"17500020_11": 1, "17500020_9": 1}
           const filteredData = Object.fromEntries(
             Object.entries(data[setor]).filter(([item]) =>
@@ -223,17 +225,36 @@ class Report extends Component {
             }
           }
         }
-        console.log("this.state.listSectors[setor][itemQuestion]",this.state.listSectors[setor][0].question)
+        // console.log("this.state.listSectors[setor][itemQuestion]",this.state.listSectors[setor][0].question)
                 acumulator.push({
           ...(acumulator[setor] || {}),
-          text: this.state.listSectors[setor][0].question,
+          text: this.state.listSectors[setor][itemQuestion].question,
           verif: verifications,
           errors: errors,
           percent: ((isOk / verifications) * 100).toFixed(2),
         });
-        console.log(acumulator)
+        setorVerifications += verifications;
+        setorIsOk += isOk;
+        verifications = 0;
+        isOk = 0;
+        errors = 0;
       }
+      let percent = ((setorIsOk / setorVerifications) * 100).toFixed(2);
+      setorPercent = {
+        ...setorPercent,
+        [setor]: percent,
+      };
+      generalData = {
+        ...generalData,
+        [setor]: acumulator,
+      };
+      setorIsOk = 0;
+      setorVerifications = 0;
     }
+    this.setState({
+      setorPercent: setorPercent,
+      generalData: generalData,
+    });
   }
 
   handleChange(props) {
@@ -378,10 +399,10 @@ class Report extends Component {
                           alignSelf: "flex-start",
                           marginLeft: 10,
                           fontWeight: "bold",
-                          fontSize: 22,
+                          fontSize: 18,
                         }}
                       >
-                        {this.state.listSectors[index]}
+                        {sectorKey}
                       </Text>
                       <View
                         style={{
@@ -393,7 +414,7 @@ class Report extends Component {
                             this.state.showView !== index
                               ? this.backColor(
                                   this.state.setorPercent[
-                                    this.state.listSectors[index]
+                                    sectorKey
                                   ],
                                   15
                                 )
@@ -409,10 +430,10 @@ class Report extends Component {
                           }}
                         >
                           {this.state.setorPercent[
-                            this.state.listSectors[index]
+                            sectorKey
                           ] !== "NaN"
                             ? this.state.setorPercent[
-                                this.state.listSectors[index]
+                              sectorKey
                               ] + "%"
                             : "-"}
                         </Text>
