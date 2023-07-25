@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { dbpath } from "../config/dbpath";
-import { db } from "../../database";
+import databaseDb from "../../database";
 
 function loadQuestions() {
-  const database = getDatabase(db);
+  const database = getDatabase(databaseDb);
   const [data, setData] = useState(null);
 
   useEffect(() => {

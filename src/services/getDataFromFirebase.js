@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { dbpath } from "../config/dbpath";
-import { db } from "../../database";
+import databaseDb from "../../database";
 
 export function useFirebaseData() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
 
   useEffect(() => {
-    const database = getDatabase(db);
+    const database = getDatabase(databaseDb);
     const reference = ref(database, `data/${dbpath}/records`);
     onValue(reference, (snapshot) => {
       const firebaseData = snapshot.val();
