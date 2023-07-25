@@ -10,25 +10,23 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyRadioBt from "../../components/radioBt";
 import { getDatabase, ref, update } from "firebase/database";
-import { db } from "../../../database";
 import { getCurrentDate } from "../../functions/getDate";
 import { dbpath } from "../../config/dbpath";
 import { MyContext } from "../../services/dataContext";
 import MainContainer from "../../components/MainContainer";
+import databaseDb from "../../../database";
 
 const sgaBackground = require("../../../assets/sga.jpg");
 
 const Checklist = ({ route }) => {
   const [setor, setSetor] = useState({ name: route.params.fireDBName });
   const [listas, setListas] = useState(route.params.setores);
-  const [contextTurno, setContextTurno] = useState(global.checkValue);
   const firebaseData = route.params.fireData;
   const { currentUser } = useContext(MyContext);
-  console.log(currentUser);
 
   const updateValueDb = (result, placed) => {
-    const database = getDatabase(db);
-    const key = `${currentUser.displayName}_${placed + 1}`;
+    const database = getDatabase(databaseDb);
+    const key = `${currentUser.displayName}_${placed}`;
     const value = result;
     update(
       ref(
@@ -65,7 +63,7 @@ const Checklist = ({ route }) => {
               {firebaseData && (
                 <MyRadioBt
                   firebaseData={firebaseData}
-                  dailyId={`${contextTurno}_${index + 1}`}
+                  dailyId={`${currentUser.displayName}_${index}`}
                   setor={setor.name}
                   callback={(value) => {
                     updateValueDb(value, index);
