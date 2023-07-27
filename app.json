@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "checklist_sga",
+    "name": "cloud_checklistv2",
     "slug": "checklist_sga",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.tgthiag.checklist_sga"
+      "package": "com.tgthiag.cloud_checklistv2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
