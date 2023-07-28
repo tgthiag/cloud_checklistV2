@@ -10,6 +10,7 @@ import { MyContext } from "../../services/dataContext";
 import { auth } from "../../../database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MainContainer from "../../components/MainContainer";
+import Title from "../../components/title";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -17,12 +18,16 @@ const LoginScreen = ({ navigation }) => {
   const [displayName, setDisplayName] = useState("");
   const [registrationMode, setRegistrationMode] = useState(false);
   const { currentUser, updateUser } = useContext(MyContext);
+  const logo = require("../../../assets/garantia-de-qualidade.png");
 
   useEffect(() => {
+    if (currentUser) {
+      navigation.replace("main");
+    }
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         updateUser(user);
-        navigation.navigate("main");
+        navigation.replace("main");
       }
     });
 
@@ -96,6 +101,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <MainContainer>
+      <Title children={"CloudCheck V2"} />
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"

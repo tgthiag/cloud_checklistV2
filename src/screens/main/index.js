@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   ImageBackground,
@@ -6,20 +6,24 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import loadQuestions from "../../services/loadquestions";
 import { useFirebaseData } from "../../services/getDataFromFirebase";
 import MainContainer from "../../components/MainContainer";
+import { auth } from "../../../database";
+import { MyContext } from "../../services/dataContext";
 
 const sgaBackground = require("../../../assets/sga.jpg");
-const logo = require("../../../assets/sga_logo.png");
+const logo = require("../../../assets/garantia-de-qualidade.png");
 
 export default function MainPage({ navigation }) {
   const [listSectors, setListSectors] = useState(null);
   const data = loadQuestions();
   const firebaseData = useFirebaseData();
+  const { currentUser, updateUser } = useContext(MyContext);
 
   useEffect(() => {
     if (data) {
@@ -31,6 +35,18 @@ export default function MainPage({ navigation }) {
       setListSectors(updatedListSectors);
     }
   }, [data]);
+
+  const handleLogout = () => {
+    auth.signOut()
+      .then(() => {
+        updateUser("")
+        navigation.replace("login");
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
+  };
+
   const RelatorioButton = () => {
     return (
       <TouchableOpacity
@@ -81,7 +97,16 @@ export default function MainPage({ navigation }) {
 
   return (
     <MainContainer>
+          {/* Render the logout icon button in the header */}
+          <TouchableOpacity
+        onPress={handleLogout}
+        style={{ position: "absolute", top: 20, right: 20 }}
+      >
+        <Ionicons name="log-out-outline" size={24} color="black" />
+      </TouchableOpacity>
+      <View>
       <Image source={logo} style={styles.logo} />
+      </View>
       <FlatList
         style={{ width: "100%" }}
         data={listSectors}
@@ -141,25 +166,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  ImageBackground: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  centerContainer: {
-    width: "90%",
-    height: "95%",
-    backgroundColor: "rgba(60,60,60,0.3)",
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderLeftWidth: 0.1,
-    borderBottomWidth: 0.8,
-    borderRightWidth: 0.1,
-  },
   logo: {
-    justifyContent: "center",
+    width: 150, // Set the desired width in pixels
+    height: 150, // Set the desired height in pixels
     marginBottom: 15,
   },
   button: {
